@@ -10,31 +10,23 @@ import javax.validation.Validator;
 import java.util.Set;
 
 @SpringBootTest
-class PersonTest {
+class BinatangTest {
 
     @Autowired
     private Validator validator;
 
     @Test
-    void testPersonNotValid() {
-
-        var person = new Person("", "");
-        Set<ConstraintViolation<Person>> constraintViolationSet = validator.validate(person);
-
+    void testPalindromeFail() {
+        Set<ConstraintViolation<Binatang>> constraintViolationSet = validator.validate(Binatang.builder().name("harimau").build());
+        String messageFail = constraintViolationSet.stream().findFirst().get().getMessage();
         Assertions.assertFalse(constraintViolationSet.isEmpty());
-        Assertions.assertEquals(2, constraintViolationSet.size());
-
+        Assertions.assertEquals(1, constraintViolationSet.size());
+        Assertions.assertEquals("Data bukan polindrome", messageFail);
     }
 
     @Test
-    void testPersonValid() {
-
-        var person = new Person("1", "Dani");
-        Set<ConstraintViolation<Person>> constraintViolationSet = validator.validate(person);
-
+    void testPalindromeSuccess() {
+        Set<ConstraintViolation<Binatang>> constraintViolationSet = validator.validate(Binatang.builder().name("kodok").build());
         Assertions.assertTrue(constraintViolationSet.isEmpty());
-        Assertions.assertNotNull(constraintViolationSet);
-
     }
-
 }
